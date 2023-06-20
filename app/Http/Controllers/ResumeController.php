@@ -12,7 +12,8 @@ class ResumeController extends Controller
      */
     public function index()
     {
-        //
+        $resumes = Resume::where('deleted', '0')->with('user', 'profile')->get();
+        return view('user.resume.index', compact('resumes'));
     }
 
     /**
@@ -34,7 +35,7 @@ class ResumeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Resume $resume)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +43,7 @@ class ResumeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Resume $resume)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +51,7 @@ class ResumeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Resume $resume)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,8 +59,8 @@ class ResumeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Resume $resume)
+    public function destroy(string $id)
     {
-        //
+        dd($id);
     }
 }

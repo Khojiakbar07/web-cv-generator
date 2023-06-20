@@ -17,10 +17,15 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('email_verified_at')->nullable();
+            $table->string('phone')->unique()->nullable();
+            $table->string('phone_verified_at')->nullable();
             $table->string('password');
-            $table->bigInteger('phone')->nullable();
             $table->string('location')->nullable();
             $table->string('about_me')->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_premium')->default(false);
+            $table->boolean('is_banned')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

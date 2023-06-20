@@ -6,8 +6,17 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function index()
     {
-        return redirect('dashboard');
+        if(is_user()){
+            return redirect()->route('dashboard');
+        }
+        return redirect()->route('login');
     }
+
+    public function login(){
+        return view('session/login-session');
+    }
+
+
 }

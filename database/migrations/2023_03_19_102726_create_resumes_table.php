@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('resumes', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable()->default('My resume');
+            $table->string('title')->nullable();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('person_id')->constrained('people');
-            $table->foreignId('resume_template_id')->constrained('resume_templates');
+            $table->foreignId('profile_id')->constrained('profiles');
+            $table->foreignId('template_id')->constrained('templates');
+            $table->boolean('deleted')->default(0);
             $table->timestamps();
 
         });

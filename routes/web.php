@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\DebugController;
+use App\Http\Controllers\HomeController;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResumeController;
+
+use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetController;
 use App\Http\Controllers\Auth\SessionsController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InfoUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,68 +25,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/', [HomeController::class, 'home']);
-	Route::get('dashboard', function () {
-		return view('dashboard');
-	})->name('dashboard');
+    Route::any('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::any('/settings', [DashboardController::class, 'settings'])->name('settings');
 
-	Route::get('billing', function () {
-		return view('billing');
-	})->name('billing');
+    // Profile
+    Route::resource('profile', ProfileController::class);
 
-	Route::get('profile', function () {
-		return view('profile');
-	})->name('profile');
+    // Resume
+    Route::resource('resume', ResumeController::class);
 
-	Route::get('rtl', function () {
-		return view('rtl');
-	})->name('rtl');
+    Route::get('/downloads', [DashboardController::class, 'downloads'])->name('downloads');
+    Route::get('/cv_templates', [DashboardController::class, 'templates'])->name('templates');
+    Route::get('/cv_template/{slug}', [DashboardController::class, 'template'])->name('template');
 
-	Route::get('user-management', function () {
-		return view('laravel-examples/user-management');
-	})->name('user-management');
+    // Additional
+    Route::get('/support', [DashboardController::class, 'support'])->name('user.support');
+    Route::get('/plans', [DashboardController::class, 'plan'])->name('user.plan');
 
-	Route::get('tables', function () {
-		return view('tables');
-	})->name('tables');
-
-    Route::get('virtual-reality', function () {
-		return view('virtual-reality');
-	})->name('virtual-reality');
-
-    Route::get('static-sign-in', function () {
-		return view('static-sign-in');
-	})->name('sign-in');
-
-    Route::get('static-sign-up', function () {
-		return view('static-sign-up');
-	})->name('sign-up');
-
-    Route::get('/logout', [SessionsController::class, 'destroy']);
-	Route::get('/user-profile', [InfoUserController::class, 'create']);
-	Route::post('/user-profile', [InfoUserController::class, 'store']);
-    Route::get('/login', function () {
-		return view('dashboard');
-	})->name('sign-up');
+	Route::get('/user-profile', [DashboardController::class, 'create']);
+	Route::post('/user-profile', [DashboardController::class, 'store']);
 });
 
-
-
 Route::group(['middleware' => 'guest'], function () {
-    Route::get('/register', [RegisterController::class, 'create']);
+    Route::get('/login', [HomeController::class, 'login'])->name('login');
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
-    Route::get('/login', [SessionsController::class, 'create']);
-    Route::post('/session', [SessionsController::class, 'store']);
 	Route::get('/login/forgot-password', [ResetController::class, 'create']);
 	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
-
+    Route::post('/session', [SessionsController::class, 'store']);
 });
 
-Route::get('/login', function () {
-    return view('session/login-session');
-})->name('login');
+Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
+
+// Debug Route
+Route::get('/debug', [DebugController::class, 'index'])->name('debug');
